@@ -1,0 +1,5 @@
+The small language model learns from text.
+Artificial intelligence studies language and computation.
+The model predicts the next token in a sequence.
+Language models learn useful patterns from many documents.
+This tiny corpus is only for tokenizer smoke testing.
