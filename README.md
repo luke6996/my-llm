@@ -55,7 +55,7 @@ python -m myllm_tiny.train --synthetic --total-tokens 32768 --checkpoint-dir che
 !pip install -r requirements.txt
 ```
 
-### 2. 選擇 tokenizer
+### 2. 訓練 8K tokenizer
 
 以下命令會 streaming 讀取 FineWeb-Edu，只取一小批文件建立 8K BPE tokenizer：
 
@@ -77,7 +77,7 @@ python -m myllm_tiny.tokenizer \
   --output artifacts/tokenizer.json
 ```
 
-若目標是先快速驗證完整 training pipeline，也可以直接使用 Hugging Face 上的 GPT-2 tokenizer。這只下載 tokenizer，不會使用 GPT-2 模型權重：
+若只是想快速驗證完整 training pipeline，也可以跳過自訓步驟，改用 Hugging Face 上的 GPT-2 tokenizer。這只下載 tokenizer，不會使用 GPT-2 模型權重：
 
 ```bash
 python -m myllm_tiny.train \
@@ -93,13 +93,14 @@ GPT-2 tokenizer 的 vocabulary 約 50K，因此模型會比使用 8K 自訓 toke
 
 ```bash
 python -m myllm_tiny.train \
-  --pretrained-tokenizer gpt2 \
+  --tokenizer artifacts/tokenizer.json \
   --dataset HuggingFaceFW/fineweb-edu \
   --dataset-config sample-10BT \
   --total-tokens 1000000 \
   --micro-batch-size 8 \
   --gradient-accumulation-steps 8 \
-  --checkpoint-dir /content/drive/MyDrive/MyLLM-Tiny/checkpoints
+  --checkpoint-dir /content/drive/MyDrive/MyLLM-Tiny/checkpoints \
+  --checkpoint-interval 25
 ```
 
 Colab runtime 中斷後，使用相同參數並加上：
@@ -115,7 +116,7 @@ Colab runtime 中斷後，使用相同參數並加上：
 ```bash
 python -m myllm_tiny.generate \
   --checkpoint checkpoints/latest.pt \
-  --pretrained-tokenizer gpt2 \
+  --tokenizer artifacts/tokenizer.json \
   --prompt "Artificial intelligence is" \
   --max-new-tokens 80 \
   --temperature 0.8 \
